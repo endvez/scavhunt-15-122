@@ -1,0 +1,118 @@
+/**************************************************************************/
+
+/*              COPYRIGHT Carnegie Mellon University 2021                 */
+/* Do not post this file or any derivative on a public site or repository */
+/**************************************************************************/
+// Allows you to use I/O functions like printf
+#use <conio>
+// Allows you to use string functions like string_join
+#use <string>
+// Allows you to use utility functions like abs() and min()
+#use <util>
+
+bool is_substring(string little, string big) {
+  int len = string_length(little);
+  int offset = string_length(big) - len;
+  while (offset >= 0)
+  //@loop_invariant offset <= string_length(big) - string_length(little);
+  {
+    if (string_equal(little, string_sub(big, offset, offset+len))) return true;
+    offset--;
+  }
+  return false;
+}
+
+int f(string s1, string s2)
+//@ensures 0 <= \result && \result <= string_length(s1);
+//@ensures 0 <= \result && \result <= string_length(s2);
+//@ensures string_equal(string_sub(s1, 0, \result), string_sub(s2, 0, \result));
+/*@ensures \result == string_length(s1)
+  @     || \result == string_length(s2)
+  @     || string_charat(s1, \result) != string_charat(s2, \result); @*/
+{
+  int shorterstringlength;
+  int numofcharsequal = 0;
+  string string1 = s1;
+  string string2 = s2;
+  if (string_equal(string1,"") || string_equal(string2,"")) {
+    return numofcharsequal;
+  }
+  if (string_compare(string1, string2) > 0) {
+    shorterstringlength = string_length(string2);
+  } else {
+    shorterstringlength = string_length(string1);
+  }
+
+  while (string_charat(string1, numofcharsequal) == string_charat(string2, numofcharsequal)) {
+    numofcharsequal = numofcharsequal + 1;
+    if (numofcharsequal >= shorterstringlength)
+      return numofcharsequal;
+  }
+  return numofcharsequal;
+}
+
+int g(string s)
+//@requires string_length(s) > 0;
+//@requires string_charat(s, 0) != string_charat(s, string_length(s) - 1);
+//@ensures 0 <= \result && \result < string_length(s)-1;
+//@ensures string_charat(s, \result) == string_charat(s, 0);
+//@ensures string_charat(s, \result+1) != string_charat(s, 0);
+{
+  int indexofchar = 0;
+  string str = s;
+  for (int i = 0; i < string_length (str); i++) {
+    if (string_charat(str,0) == string_charat(str,i)) {
+      indexofchar = i;
+    }
+  }
+  return indexofchar;
+}
+
+string h(string s)
+//@ensures is_substring(\result, s);
+/*@ensures string_length(s) < 128
+  @     || (string_length(\result) > 1
+  @         && string_charat(\result, 0)
+  @            == string_charat(\result, string_length(\result) - 1)); @*/
+{
+  string inputstring = s;
+  string result = "";
+  for (int i = 0 ; i < string_length(inputstring); i++) {
+    for (int j = i+1; j < string_length(inputstring); j++) {
+      if (string_charat(inputstring, i) == string_charat(inputstring, j)) {
+      result = string_sub(inputstring, i ,j+1);
+      return result;
+
+      }
+    }
+    }
+return result;
+}
+
+
+
+
+/**************** DO NOT CHANGE THE CODE BELOW THIS LINE ********************/
+
+int f(string s1, string s2)
+/*@ensures 0 <= \result && \result <= string_length(s1);                   @*/
+/*@ensures 0 <= \result && \result <= string_length(s2);                   @*/
+/*@ensures string_equal(string_sub(s1, 0, \result),
+  @                     string_sub(s2, 0, \result));                       @*/
+/*@ensures \result == string_length(s1)
+  @     || \result == string_length(s2)
+  @     || string_charat(s1, \result) != string_charat(s2, \result);       @*/ ;
+
+int g(string s)
+/*@requires string_length(s) > 0;                                          @*/
+/*@requires string_charat(s, 0) != string_charat(s, string_length(s) - 1); @*/
+/*@ensures 0 <= \result && \result < string_length(s)-1;                   @*/
+/*@ensures string_charat(s, \result) == string_charat(s, 0);               @*/
+/*@ensures string_charat(s, \result+1) != string_charat(s, 0);             @*/ ;
+
+string h(string s)
+/*@ensures is_substring(\result, s);                                       @*/
+/*@ensures string_length(s) < 128
+  @     || (string_length(\result) > 1
+  @         && string_charat(\result, 0)
+  @            == string_charat(\result, string_length(\result) - 1));     @*/ ;
